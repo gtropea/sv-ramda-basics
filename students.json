@@ -1,0 +1,50 @@
+[
+    {
+        "first":"Gino",
+        "last":"Palletta",
+        "results":
+        [
+            {
+                "courseName":"Calculus",
+                "score":18
+            },
+            {
+                "courseName":"Physics",
+                "score":30
+            },
+            {
+                "courseName":"Geometry",
+                "score":28
+            },
+                {"courseName":"Compilers",
+                "score":30
+            }
+        ]
+    },
+    {
+        "first":"Luciano",
+        "last":"Deadteeth",
+        "results":
+        [
+            {
+                "courseName":"Calculus",
+                "score":26
+            },
+            {
+                "courseName":"Physics",
+                "score":20
+            },
+            {
+                "courseName":"Electronic Amplifiers",
+                "score":30
+            },
+            {
+                "courseName":"Analog Circuits",
+                "score":30
+            },
+                {"courseName":"Economy",
+                "score":19
+            }
+        ]
+    }
+]

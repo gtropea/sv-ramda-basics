@@ -1,0 +1,25 @@
+{
+  "name": "sv-ramda-basics",
+  "version": "1.0.0",
+  "description": "a Ramda project basic",
+  "main": "index.js",
+  "scripts": {
+    "test": "node index"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gtropea/sv-ramda-basics.git"
+  },
+  "keywords": [
+    "ramda"
+  ],
+  "author": "giuseppe tropea",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/gtropea/sv-ramda-basics/issues"
+  },
+  "homepage": "https://github.com/gtropea/sv-ramda-basics#readme",
+  "dependencies": {
+    "ramda": "^0.27.0"
+  }
+}
