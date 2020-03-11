@@ -56,3 +56,10 @@ averages
 console.log( 'GOOD',
 ramda.filter(true_if_good_average, averages)
 )
+
+console.log( 'BEST',
+ramda.pipe(
+    ramda.sortWith([ramda.descend(student => student.avg)]),
+    ramda.head,
+)(averages)
+)
