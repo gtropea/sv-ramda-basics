@@ -1,4 +1,4 @@
-const ramda = require('ramda')
+const R = require('ramda')
 const fs = require('fs')
 
 let data = fs.readFileSync('students.json')
@@ -7,36 +7,36 @@ let students = JSON.parse(data)
 
 //console.log( 'MIRACLE',
 
-//ramda.map(
-//ramda.mean
+//R.map(
+//R.mean
 //,
-//ramda.map(
-//ramda.map(result => result.score)
+//R.map(
+//R.map(result => result.score)
 //,
-//ramda.map(student => student.results, students)
+//R.map(student => student.results, students)
 //)
 //)
 //)
 
 
 // utility function follows: it uses the second parameter "index" of the .map()'s
-// callback signature. Can ramda.map does work here?
+// callback signature. Can R.map does work here?
 const merge_arrays = (a1, a2) => a1.map( (x, i) => [x, a2[i]] ) // WARNING: THIS IS NOT IMMUTABLE
 
 
-const extract_scores_of_a_students_results = results => ramda.map(result => result.score, results)
+const extract_scores_of_a_students_results = results => R.map(result => result.score, results)
 
-const compute_average_score_of_a_students_scores = scores => ramda.mean(scores)
+const compute_average_score_of_a_students_scores = scores => R.mean(scores)
 
 const true_if_good_average = student_info => student_info.avg > 25
 
 
 const students_with_averages = merge_arrays(
-    ramda.map(student => student.first, students),
-    ramda.map(
+    R.map(student => student.first, students),
+    R.map(
         compute_average_score_of_a_students_scores,
-        ramda.map(
-            extract_scores_of_a_students_results, ramda.map(student => student.results, students)
+        R.map(
+            extract_scores_of_a_students_results, R.map(student => student.results, students)
         )
     )
 )
@@ -55,20 +55,29 @@ averages
 )
 
 console.log( 'GOOD',
-ramda.filter(true_if_good_average, averages)
+R.filter(true_if_good_average, averages)
 )
 
 console.log( 'BEST',
-ramda.pipe(
-    ramda.sortWith([ramda.descend(student => student.avg)]),
-    ramda.head,
+R.pipe(
+    R.sortWith([R.descend(student => student.avg)]),
+    R.head,
 )(averages)
 )
 
 
+
+
+
+
+
+
+
+
+
+
+
 const date_to_unix = datestring => parseInt((new Date(datestring).getTime() / 1000).toFixed(0))
-
-
 
 
 let datacv = fs.readFileSync('covid_stripped.json')
@@ -77,8 +86,42 @@ let corona = JSON.parse(datacv)
 const regions_set = new Set(corona.map(region => region.denominazione_regione))
 const all_regions = Array.from(regions_set)
 
-
 console.log(all_regions)
+
+
+const copyfield = (src, dest) => R.converge(R.assoc(dest), [R.prop(src), R.identity])
+
+const yesterdays_positivi = R.pipe(
+    R.pick(['totale_attualmente_positivi', 'nuovi_attualmente_positivi']),
+    R.evolve({nuovi_attualmente_positivi: R.negate}), // change sign to one value so that we will subtract
+    R.values,
+    R.sum, // here i have yesterday's positivi by summing the 2 values in the array
+)
+
+const new_positivi_percentage = R.pipe(
+    R.pick(['totale_attualmente_positivi', 'yesterdays_positivi']),
+    R.values,
+    R.apply(R.divide), // divide is 2ary function, need apply tu use it on array
+    R.subtract(1),
+    R.multiply(100),
+    R.negate,
+)
+
+const enrich_datapoint = R.pipe(
+    R.converge(R.assoc('yesterdays_positivi'), [yesterdays_positivi, R.identity]),
+    R.converge(R.assoc('new_positivi_percentage'), [new_positivi_percentage, R.identity]),
+    R.dissoc('yesterdays_positivi'),
+)
+
+const enrich_datapoints = R.map(enrich_datapoint)
+
+const enriched_datapoints = enrich_datapoints(corona)
+
+
+
+console.log(enriched_datapoints)
+
+
 
 
 // pick up the most hit regions
