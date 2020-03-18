@@ -186,13 +186,14 @@ const timeshift_and_cleanup_a_date_for_a_region = (date, region) => {
 // where g is the global flag to replace ALL commas in the resulting big string with void.
 // Also the "data" (timestamp) field is split and just the day and not the hour is used
 // Please notice the newlines to space apart the plots in gnuplots input format
+// NOT USED ANYMORE, switched to integer X axis instead of string of dates
 const output = regions.map(region => `TIME ${region}
 `+corona.filter(datapoint => datapoint.denominazione_regione == region).
 map(datapoint => `${timeshift_and_cleanup_a_date_for_a_region(datapoint.data, region)} ${datapoint.totale_attualmente_positivi}
 `).toString()+`
 
 
-`).toString().replace(/,/g,'').replace(/2020-/g,'')
+`).toString().replace(/,/g,'').replace(/2020-/g,'') // NOT USED
 
 
 
