@@ -76,11 +76,14 @@ R.pipe(
 
 
 
-
+const {
+    identity, negate, converge, assoc, prop, pick, apply, subtract,
+    evolve, values, sum, multiply, dissoc, pipe, divide, map, when
+} = R
 const date_to_unix = datestring => parseInt((new Date(datestring).getTime() / 1000).toFixed(0))
 
 
-let datacv = fs.readFileSync('covid_stripped.json')
+let datacv = fs.readFileSync('covid.json')
 let corona = JSON.parse(datacv)
 
 const regions_set = new Set(corona.map(region => region.denominazione_regione))
@@ -89,31 +92,31 @@ const all_regions = Array.from(regions_set)
 console.log(all_regions)
 
 
-const copyfield = (src, dest) => R.converge(R.assoc(dest), [R.prop(src), R.identity])
+const copyfield = (src, dest) => converge(assoc(dest), [prop(src), identity])
 
-const yesterdays_positivi = R.pipe(
-    R.pick(['totale_attualmente_positivi', 'nuovi_attualmente_positivi']),
-    R.evolve({nuovi_attualmente_positivi: R.negate}), // change sign to one value so that we will subtract
-    R.values,
-    R.sum, // here i have yesterday's positivi by summing the 2 values in the array
+const yesterdays_positivi = pipe(
+    pick(['totale_attualmente_positivi', 'nuovi_attualmente_positivi']),
+    evolve({nuovi_attualmente_positivi: negate}), // change sign to one value so that we will subtract
+    values,
+    sum, // here i have yesterday's positivi by summing the 2 values in the array
 )
 
-const new_positivi_percentage = R.pipe(
-    R.pick(['totale_attualmente_positivi', 'yesterdays_positivi']),
-    R.values,
-    R.apply(R.divide), // divide is 2ary function, need apply tu use it on array
-    R.subtract(1),
-    R.multiply(100),
-    R.negate,
+const new_positivi_percentage = pipe(
+    pick(['totale_attualmente_positivi', 'yesterdays_positivi']),
+    values,
+    apply(divide), // divide is 2ary function, need apply tu use it on array
+    subtract(1),
+    multiply(100),
+    negate,
 )
 
-const enrich_datapoint = R.pipe(
-    R.converge(R.assoc('yesterdays_positivi'), [yesterdays_positivi, R.identity]),
-    R.converge(R.assoc('new_positivi_percentage'), [new_positivi_percentage, R.identity]),
-    R.dissoc('yesterdays_positivi'),
+const enrich_datapoint = pipe(
+    converge(assoc('yesterdays_positivi'), [yesterdays_positivi, identity]),
+    converge(assoc('new_positivi_percentage'), [new_positivi_percentage, identity]),
+    dissoc('yesterdays_positivi'),
 )
 
-const enrich_datapoints = R.map(enrich_datapoint)
+const enrich_datapoints = map(enrich_datapoint)
 
 const enriched_datapoints = enrich_datapoints(corona)
 
