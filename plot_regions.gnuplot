@@ -8,6 +8,7 @@ set style data lines
 set ylabel "total positive cases"
 #set autoscale
 set autoscale y
+set logscale y
 set xrange [-5:*]
 #set yrange [0:2000]
 set key autotitle columnhead
