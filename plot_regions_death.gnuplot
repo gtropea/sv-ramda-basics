@@ -1,11 +1,12 @@
 # this uses Xlabels from the file
 set title "Coronavirus diffusion in Italy's regions"
-set label 1 "Data from official repository https://github.com/pcm-dpc/COVID-19"  font ",6"
+set label 1 "Data from official repository https://github.com/pcm-dpc/COVID-19" font ",6"
 set label 1 at graph 0.02, 0.85 tc lt 3
 set label 2 "Giuseppe Tropea giutropea\\@gmail.com" font ",6"
 set label 2 at graph 0.02, 0.80 tc lt 3
 set style data lines
 set ylabel "total deaths"
+set xlabel "days (day 0 is all regions timeshifted to same number of positive cases)" font ",8"
 #set autoscale
 set autoscale y
 set logscale y
