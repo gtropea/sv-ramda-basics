@@ -1,85 +1,11 @@
 const R = require('ramda')
 const fs = require('fs')
-
-let data = fs.readFileSync('students.json')
-let students = JSON.parse(data)
-
-
-//console.log( 'MIRACLE',
-
-//R.map(
-//R.mean
-//,
-//R.map(
-//R.map(result => result.score)
-//,
-//R.map(student => student.results, students)
-//)
-//)
-//)
-
-
-// utility function follows: it uses the second parameter "index" of the .map()'s
-// callback signature. Can R.map does work here?
-const merge_arrays = (a1, a2) => a1.map( (x, i) => [x, a2[i]] ) // WARNING: THIS IS NOT IMMUTABLE
-
-
-const extract_scores_of_a_students_results = results => R.map(result => result.score, results)
-
-const compute_average_score_of_a_students_scores = scores => R.mean(scores)
-
-const true_if_good_average = student_info => student_info.avg > 25
-
-
-const students_with_averages = merge_arrays(
-    R.map(student => student.first, students),
-    R.map(
-        compute_average_score_of_a_students_scores,
-        R.map(
-            extract_scores_of_a_students_results, R.map(student => student.results, students)
-        )
-    )
-)
-
-
-const averages = students_with_averages.map((e) => {
-    r = {};
-    r['name'] = e[0];
-    r['avg'] = e[1];
-    return r;
-  })
-
-
-console.log( 'ALL AVG',
-averages
-)
-
-console.log( 'GOOD',
-R.filter(true_if_good_average, averages)
-)
-
-console.log( 'BEST',
-R.pipe(
-    R.sortWith([R.descend(student => student.avg)]),
-    R.head,
-)(averages)
-)
-
-
-
-
-
-
-
-
-
-
-
-
 const {
     identity, negate, converge, assoc, prop, pick, apply, subtract,
     evolve, values, sum, multiply, dissoc, pipe, divide, map, when
 } = R
+
+
 const date_to_unix = datestring => parseInt((new Date(datestring).getTime() / 1000).toFixed(0))
 
 
@@ -202,5 +128,19 @@ map(datapoint => `${timeshift_and_cleanup_a_date_for_a_region(datapoint.data, re
 
 
 fs.writeFile('corona_regions_output.txt', output, (err) => { 
+        if (err) throw err; 
+    })
+
+
+
+const death_output = regions.map(region => `TIME ${region}
+`+corona.filter(datapoint => datapoint.denominazione_regione == region).
+map(datapoint => `${timeshift_and_cleanup_a_date_for_a_region(datapoint.data, region)} ${datapoint.deceduti}
+`).toString()+`
+
+
+`).toString().replace(/,/g,'')
+
+fs.writeFile('corona_regions_death_output.txt', death_output, (err) => { 
         if (err) throw err; 
     })
