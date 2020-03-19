@@ -14,8 +14,8 @@ gnuplot plot_regions_death.gnuplot
 
 And if your gnuplot is able to output .pdf, you will have two new plot files in your folder.
 
-The code timeshifts data, so that at day zero all curves have approximately the same number of total positive cases (hardcoded in code to 166 cases, change it when data for less hit regions consolidates, ideally around 400 cases, just like [Mark Handley did in his twitter/wesite](http://nrg.cs.ucl.ac.uk/mjh/covid19/)).
-The intent is to have a feeling of if and when regions will catch up with Lombardia, who is leading.
+The code timeshifts data, so that at day zero all curves have approximately the same number of total positive cases (hardcoded to 166 cases, change it when data for less hit regions consolidates, ideally around 400 cases, just like [Mark Handley did in his twitter/website](http://nrg.cs.ucl.ac.uk/mjh/covid19/)).
+The intent is to have a feeling if and when regions will catch up with Lombardia, who is leading.
 Sigh.
 
 Data of the five most hit regions is shown, together with a a sixth one, Sicilia, my own region. Plotting all 20 of them is too
