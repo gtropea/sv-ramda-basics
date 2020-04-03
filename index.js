@@ -21,14 +21,14 @@ console.log(all_regions)
 const copyfield = (src, dest) => converge(assoc(dest), [prop(src), identity])
 
 const yesterdays_positivi = pipe(
-    pick(['totale_attualmente_positivi', 'nuovi_attualmente_positivi']),
-    evolve({nuovi_attualmente_positivi: negate}), // change sign to one value so that we will subtract
+    pick(['totale_positivi', 'variazione_totale_positivi']),
+    evolve({variazione_totale_positivi: negate}), // change sign to one value so that we will subtract
     values,
     sum, // here i have yesterday's positivi by summing the 2 values in the array
 )
 
 const new_positivi_percentage = pipe(
-    pick(['totale_attualmente_positivi', 'yesterdays_positivi']),
+    pick(['totale_positivi', 'yesterdays_positivi']),
     values,
     apply(divide), // divide is 2ary function, need apply tu use it on array
     subtract(1),
@@ -56,7 +56,7 @@ console.log(enriched_datapoints)
 // pick up the most hit regions
 const find_coronamax_for_a_region = region =>
   corona.filter(datapoint => datapoint.denominazione_regione == region).
-  map(datapoint => datapoint.totale_attualmente_positivi).
+  map(datapoint => datapoint.totale_positivi).
   sort((a, b) => b - a)[0] // For descending sort, first element should be the highest
 
 
@@ -76,7 +76,7 @@ console.log(regions)
 
 
 const find_timeshift_for_a_region = (common_hook_value, region) =>
-  corona.filter(datapoint => datapoint.denominazione_regione == region && datapoint.totale_attualmente_positivi <= common_hook_value).
+  corona.filter(datapoint => datapoint.denominazione_regione == region && datapoint.totale_positivi <= common_hook_value).
   map(datapoint => date_to_unix(datapoint.data)).
   sort((a, b) => b - a)[0] // For descending sort, first element should be the highest timestamp of all elements having positivi < hook
 //  filter((timestamp, index, array) => index == 0 || index == array.length-1). // keep just the first and the last
@@ -95,7 +95,7 @@ const generate_timeshifts = common_hook_value =>
   )
 
 
-const timeshifts = generate_timeshifts(166) // at least 166 here, Lombardia first value...
+const timeshifts = generate_timeshifts(400) // at least 166 here, Lombardia's first available value...
 
 
 console.log(timeshifts)
@@ -115,7 +115,7 @@ const timeshift_and_cleanup_a_date_for_a_region = (date, region) => {
 // NOT USED ANYMORE, switched to integer X axis instead of string of dates
 const output = regions.map(region => `TIME ${region}
 `+corona.filter(datapoint => datapoint.denominazione_regione == region).
-map(datapoint => `${timeshift_and_cleanup_a_date_for_a_region(datapoint.data, region)} ${datapoint.totale_attualmente_positivi}
+map(datapoint => `${timeshift_and_cleanup_a_date_for_a_region(datapoint.data, region)} ${datapoint.totale_positivi}
 `).toString()+`
 
 
